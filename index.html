@@ -32,33 +32,8 @@ a {
     const {Component} = React;
     const {createStore, combineReducers} = Redux;
     const {HashRouter, Link, Router, NavLink, Switch, Route} = ReactRouterDOM;
-    /*
-    const reducers = combineReducers({
-        home: (state = [], actions) => {
-            return state;
-        }
-        events: (state = [], actions) => {
-            return state;
-        }
-    })
-    */
 
-    // const createEvent = () => {
-
-    // }
-      //const store = createStore(reducers);
-
-      const addEvent = () => {
-        setTimeout(() => {
-          store.dispatch({ events: [...store.state.events, {id: Math.random(), text: createRandomEvent()}]})
-        })
-      }
-
-      const createRandomEvent = () => {
-        return faker.fake('{{lorem.words}} - {{address.state}} {{date.soon}}');
-      }
-
-      const connect = (Component)=> {
+    const connect = (Component)=> {
         class Connected extends React.Component{
           constructor(){
             super();
@@ -79,19 +54,70 @@ a {
         return Connected;
       }
 
+    const reducers = combineReducers({
+        events: (state = [], action) => {
+            if (action.type === 'SET_EVENTS') {
+              state = action.events
+            } else if (action.type === 'ADD_EVENT'){
+              state = [...state, action.event]
+            } else if (action.type === 'DELETE_EVENT') {
+              state = [...state].filter(event => event.id !== action.event.id);
+            }
+            return state;
+        }
+    })
+
+    // const createEvent = () => {
+
+    // }
+      const store = createStore(reducers);
+
+      const getEvents = async () => {
+        const response = (await axios.get('/api/events')).data
+        store.dispatch({ type: 'SET_EVENTS', events: response});
+      }
+
+      
+
+      const _events = ({events}) => {
+        return (
+          <ul>
+            {events.map(event => <li key={Math.random()}>{event.name}</li>)}
+          </ul>
+        )
+      }
+
+      const Events = connect(_events);
+
+      const addEvent = () => {
+        setTimeout(() => {
+          store.dispatch({ events: [...store.state.events, {id: Math.random(), text: createRandomEvent()}]})
+        })
+      }
+
+      const createRandomEvent = () => {
+        return faker.fake('{{lorem.words}} - {{address.state}} {{date.soon}}');
+      }
+
+      
+
       class App extends Component{
+        constructor() {
+          super();
+          getEvents();
+        }
         render() {
           return(
             <HashRouter>
               <nav>
                   <ul>
-                    <NavLink to ='/' >Home</NavLink>
-                    <NavLink to ='/events' >Events</NavLink>
+                    <NavLink to ='/' activeClassName = 'active'>Home</NavLink>
+                    <NavLink to ='/events' activeClassName = 'active'>Events</NavLink>
                   </ul>
               </nav>
               <Switch>
-                  <Route path='/' render={()=>"Welcome to event page"} />
-                  <Route path='/events' render = {() => createRandomEvent()} />
+                  <Route exact path='/' render={()=>"Welcome to home page"} />
+                  <Route path='/events' component= {Events} />
               </Switch>
             </HashRouter>
           )
