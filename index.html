@@ -28,21 +28,35 @@ a {
   <body>
     <div id='root'></div>
     <script type='text/babel'>
-    const store = {home:[], events:[]}
-    const {createStore, combineReducers} = redux;
-    const {HashRouter, Link, Router} = ReactRouterDOM;
-    const reducer = combineReducers({
-        home: events:(state = [], actions) => {
-            return states
+    //const store = {home:[], events:[]}
+    const {Component} = React;
+    const {createStore, combineReducers} = Redux;
+    const {HashRouter, Link, Router, NavLink, Switch, Route} = ReactRouterDOM;
+    /*
+    const reducers = combineReducers({
+        home: (state = [], actions) => {
+            return state;
         }
-        events: events:(state = [], actions) => {
-            return states
+        events: (state = [], actions) => {
+            return state;
         }
     })
+    */
 
     // const createEvent = () => {
 
     // }
+      //const store = createStore(reducers);
+
+      const addEvent = () => {
+        setTimeout(() => {
+          store.dispatch({ events: [...store.state.events, {id: Math.random(), text: createRandomEvent()}]})
+        })
+      }
+
+      const createRandomEvent = () => {
+        return faker.fake('{{lorem.words}} - {{address.state}} {{date.soon}}');
+      }
 
       const connect = (Component)=> {
         class Connected extends React.Component{
@@ -66,28 +80,25 @@ a {
       }
 
       class App extends Component{
-          render{
-              return(
-                <HashRouter>
-                    <nav>
-                        <ul>
-                            <NavLink to ='/homes' >Homes</NavLink>
-                            <NavLink to ='/events' >Events</NavLink>
-                        </ul>
-                    </nav>
-                    <Switch>
-                        <Route path='/homes' render={()=><Homes/>} />
-                        <Route path='/events' render={()=><Events/>} />
-                    </Switch>
-                </HashRouter>
-              )
-          }
+        render() {
+          return(
+            <HashRouter>
+              <nav>
+                  <ul>
+                    <NavLink to ='/' >Home</NavLink>
+                    <NavLink to ='/events' >Events</NavLink>
+                  </ul>
+              </nav>
+              <Switch>
+                  <Route path='/' render={()=>"Welcome to event page"} />
+                  <Route path='/events' render = {() => createRandomEvent()} />
+              </Switch>
+            </HashRouter>
+          )
+        }
       }
 
-
-
-
-      //ReactDOM.render(<App />, document.querySelector('#root'));
+      ReactDOM.render(<App />, document.querySelector('#root'));
 
     </script>
   </body>
