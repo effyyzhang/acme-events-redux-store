@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/effyyzhang/acme-events-redux-store/issues"
   },
-  "homepage": "https://github.com/effyyzhang/acme-events-redux-store#readme"
+  "homepage": "https://github.com/effyyzhang/acme-events-redux-store#readme",
+  "dependencies": {
+    "pg": "^7.12.1"
+  }
 }
