@@ -28,6 +28,21 @@ a {
   <body>
     <div id='root'></div>
     <script type='text/babel'>
+    const store = {home:[], events:[]}
+    const {createStore, combineReducers} = redux;
+    const {HashRouter, Link, Router} = ReactRouterDOM;
+    const reducer = combineReducers({
+        home: events:(state = [], actions) => {
+            return states
+        }
+        events: events:(state = [], actions) => {
+            return states
+        }
+    })
+
+    // const createEvent = () => {
+
+    // }
 
       const connect = (Component)=> {
         class Connected extends React.Component{
@@ -48,6 +63,25 @@ a {
           }
         }
         return Connected;
+      }
+
+      class App extends Component{
+          render{
+              return(
+                <HashRouter>
+                    <nav>
+                        <ul>
+                            <NavLink to ='/homes' >Homes</NavLink>
+                            <NavLink to ='/events' >Events</NavLink>
+                        </ul>
+                    </nav>
+                    <Switch>
+                        <Route path='/homes' render={()=><Homes/>} />
+                        <Route path='/events' render={()=><Events/>} />
+                    </Switch>
+                </HashRouter>
+              )
+          }
       }
 
 
